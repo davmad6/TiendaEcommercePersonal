@@ -10,9 +10,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// 2. Inyección de dependencias por capas (Repositorio y Servicio de Usuarios)
+// 2. Inyección de dependencias por capas (Usuarios y Catálogo)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 
 // 3. Política CORS para permitir peticiones desde el frontend en React + TypeScript
 builder.Services.AddCors(options =>

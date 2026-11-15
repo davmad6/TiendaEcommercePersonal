@@ -13,7 +13,9 @@ namespace TiendaEcommerce.Api.Data
         {
         }
 
-        // Representa la tabla 'usuarios' de la base de datos
+        // Tablas mapeadas en la base de datos tienda_ecommerce_personal
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Producto> Productos { get; set; }
     }
 }
