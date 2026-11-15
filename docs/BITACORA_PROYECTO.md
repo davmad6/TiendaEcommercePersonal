@@ -7,3 +7,4 @@
 - Paso 3: Implementados Modulos de Categorias y Productos (HU-02) alineados al esquema real de PostgreSQL.
 - Paso 4: Implementado Modulo Transaccional de Pedidos y Detalle de Pedidos (HU-03) con control de inventario y validado contra PostgreSQL.
 - Paso 5: Inicializado proyecto Frontend en React + TypeScript (Vite) con estructura modular (types, services, components, pages).
+- Paso 6: Implementados contratos TypeScript (types/ecommerce.ts) y cliente HTTP REST (services/api.ts) conectados al backend C#.
