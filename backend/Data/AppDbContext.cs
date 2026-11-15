@@ -5,7 +5,7 @@ namespace TiendaEcommerce.Api.Data
 {
     /// <summary>
     /// Contexto principal de Entity Framework Core.
-    /// Administra la conexión y las consultas parametrizadas hacia PostgreSQL.
+    /// Mapea las 5 tablas relacionales de la base de datos tienda_ecommerce_personal.
     /// </summary>
     public class AppDbContext : DbContext
     {
@@ -13,9 +13,10 @@ namespace TiendaEcommerce.Api.Data
         {
         }
 
-        // Tablas mapeadas en la base de datos tienda_ecommerce_personal
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Producto> Productos { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<DetallePedido> DetallePedidos { get; set; }
     }
 }
