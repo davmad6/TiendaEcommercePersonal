@@ -1,23 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using TiendaEcommerce.Api.Data;
+using TiendaEcommerce.Api.Repositories;
+using TiendaEcommerce.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Conexión a PostgreSQL mediante Entity Framework Core
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// 2. Inyección de dependencias por capas (Repositorio y Servicio de Usuarios)
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+// 3. Política CORS para permitir peticiones desde el frontend en React + TypeScript
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
+app.UseCors("PermitirFrontend");
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
