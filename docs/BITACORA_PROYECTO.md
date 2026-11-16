@@ -8,3 +8,4 @@
 - Paso 4: Implementado Modulo Transaccional de Pedidos y Detalle de Pedidos (HU-03) con control de inventario y validado contra PostgreSQL.
 - Paso 5: Inicializado proyecto Frontend en React + TypeScript (Vite) con estructura modular (types, services, components, pages).
 - Paso 6: Implementados contratos TypeScript (types/ecommerce.ts) y cliente HTTP REST (services/api.ts) conectados al backend C#.
+- Paso 7: Implementadas vistas completas del Frontend en React + TypeScript (Catalogo, Carrito, Pedidos, Gestion CRUD y Autenticacion).
