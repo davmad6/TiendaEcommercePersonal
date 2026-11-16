@@ -13,12 +13,20 @@ import type {
 const API_BASE_URL = 'http://localhost:5028/api';
 
 async function manejarRespuesta<T>(response: Response): Promise<T> {
-  const data = await response.json().catch(() => null);
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const data: unknown = await response.json().catch(() => null);
   if (!response.ok) {
-    const mensajeError =
-      data && typeof data === 'object' && 'mensaje' in data
-        ? String((data as { mensaje: string }).mensaje)
-        : `Error HTTP ${response.status}`;
+    let mensajeError = `Error HTTP ${response.status}`;
+    if (data && typeof data === 'object') {
+      if ('mensaje' in data && typeof data.mensaje === 'string') {
+        mensajeError = data.mensaje;
+      } else if ('title' in data && typeof data.title === 'string') {
+        mensajeError = data.title;
+      }
+    }
     throw new Error(mensajeError);
   }
   return data as T;
@@ -33,21 +41,50 @@ export const usuariosApi = {
   },
 
   registrar: async (payload: RegistroUsuarioPayload): Promise<{ mensaje: string; usuario: Usuario }> => {
-    const res = await fetch(`${API_BASE_URL}/usuarios/registro`, {
+    const res = await fetch(`${API_BASE_URL}/usuarios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return manejarRespuesta<{ mensaje: string; usuario: Usuario }>(res);
+    const data = await manejarRespuesta<Usuario | { mensaje?: string; usuario: Usuario }>(res);
+    if (data && typeof data === 'object' && 'usuario' in data) {
+      return {
+        mensaje: data.mensaje ?? 'Usuario registrado correctamente.',
+        usuario: data.usuario,
+      };
+    }
+    return {
+      mensaje: 'Usuario registrado correctamente.',
+      usuario: data,
+    };
   },
 
   login: async (payload: LoginUsuarioPayload): Promise<{ mensaje: string; usuario: Usuario }> => {
-    const res = await fetch(`${API_BASE_URL}/usuarios/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    return manejarRespuesta<{ mensaje: string; usuario: Usuario }>(res);
+    const res = await fetch(`${API_BASE_URL}/usuarios`);
+    const usuarios = await manejarRespuesta<Array<Usuario & { contrasena?: string }>>(res);
+    const emailBuscado = payload.email.trim().toLowerCase();
+    const encontrado = usuarios.find((u) => u.email.trim().toLowerCase() === emailBuscado);
+
+    if (!encontrado) {
+      throw new Error('No existe una cuenta registrada con ese correo electrónico.');
+    }
+
+    if (typeof encontrado.contrasena === 'string' && encontrado.contrasena !== payload.contrasena) {
+      throw new Error('La contraseña ingresada es incorrecta.');
+    }
+
+    const usuarioLimpio: Usuario = {
+      idUsuario: encontrado.idUsuario,
+      nombre: encontrado.nombre,
+      email: encontrado.email,
+      direccion: encontrado.direccion,
+      telefono: encontrado.telefono,
+    };
+
+    return {
+      mensaje: 'Inicio de sesión exitoso.',
+      usuario: usuarioLimpio,
+    };
   },
 };
 
@@ -121,18 +158,34 @@ export const pedidosApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return manejarRespuesta<{ mensaje: string; pedido: Pedido }>(res);
+    const data = await manejarRespuesta<Pedido | { mensaje?: string; pedido: Pedido }>(res);
+    if (data && typeof data === 'object' && 'pedido' in data) {
+      return {
+        mensaje: data.mensaje ?? 'Pedido registrado correctamente.',
+        pedido: data.pedido,
+      };
+    }
+    return {
+      mensaje: 'Pedido registrado correctamente.',
+      pedido: data,
+    };
   },
 
   actualizarEstado: async (
     idPedido: number,
     estado: string
-  ): Promise<{ mensaje: string; pedido: Pedido }> => {
+  ): Promise<{ mensaje: string }> => {
     const res = await fetch(`${API_BASE_URL}/pedidos/${idPedido}/estado`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ estado }),
     });
-    return manejarRespuesta<{ mensaje: string; pedido: Pedido }>(res);
+    const data = await manejarRespuesta<{ mensaje?: string } | undefined>(res);
+    return {
+      mensaje:
+        data && typeof data === 'object' && typeof data.mensaje === 'string'
+          ? data.mensaje
+          : `Estado del pedido #${idPedido} actualizado a "${estado}".`,
+    };
   },
 };
