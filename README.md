@@ -1,6 +1,6 @@
 # TiendaEcommercePersonal
 
-Aplicación web full-stack de comercio electrónico desarrollada como proyecto formativo para el programa **Tecnólogo en Análisis y Desarrollo de Software (ADSO) — SENA** (Evidencias **AA3-EV01** y **AA3-EV02**, instructor **Eumir Pulido**).
+Aplicación web full-stack de comercio electrónico desarrollada como proyecto formativo para el programa **Tecnólogo en Análisis y Desarrollo de Software (ADSO) - SENA.**
 
 ## Arquitectura y Stack Tecnológico
 
