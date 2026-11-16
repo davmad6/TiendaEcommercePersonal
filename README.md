@@ -47,4 +47,4 @@ Aplicación web full-stack de comercio electrónico desarrollada como proyecto f
 
 ## Autor
 
-* **David Madrid Peña** — Aprendiz SENA (Análisis y Desarrollo de Software).
+* **David Madrid Peña** - Aprendiz SENA (Análisis y Desarrollo de Software).
