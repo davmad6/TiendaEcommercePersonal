@@ -7,7 +7,7 @@ Aplicación web full-stack de comercio electrónico desarrollada como proyecto f
 * **Base de Datos:** PostgreSQL (administrada con pgAdmin 4), modelo relacional normalizado de 5 tablas.
 * **Backend:** C# con ASP.NET Core Web API (.NET), ejecutándose en `http://localhost:5028`.
 * **Frontend:** React + TypeScript con Vite, ejecutándose en `http://localhost:5173`.
-* **Control de Versiones:** Git (flujo incremental con bitácora técnica en `docs/`).
+* **Control de Versiones:** Git (repositorio remoto en GitHub y bitácora técnica en `docs/`).
 
 ## Modelo Relacional (PostgreSQL)
 
