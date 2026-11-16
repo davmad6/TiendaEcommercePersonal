@@ -19,9 +19,9 @@ Aplicación web full-stack de comercio electrónico desarrollada como proyecto f
 
 ## Módulos Funcionales Implementados
 
-* **HU-01 — Gestión de Usuarios y Autenticación:** Registro de clientes (`POST /api/usuarios`), inicio de sesión y persistencia de sesión activa en el cliente.
-* **HU-02 — Catálogo e Inventario (CRUD):** Consulta filtrada por categorías (`GET /api/productos`, `GET /api/categorias`) y panel administrativo para crear categorías y crear, editar o eliminar productos (`POST`, `PUT`, `DELETE`).
-* **HU-03 — Carrito y Pedidos Transaccionales:** Creación de órdenes (`POST /api/pedidos`) con validación de inventario y descuento automático de stock en PostgreSQL, historial de pedidos (`GET /api/pedidos`) y actualización de estado (`PUT /api/pedidos/{id}/estado`) con reversión automática de stock al cancelar.
+* **HU-01 — Gestión de Usuarios y Autenticación:** registro de clientes (`POST /api/usuarios`), inicio de sesión y persistencia de sesión activa en el cliente.
+* **HU-02 — Catálogo e Inventario (CRUD):** consulta filtrada por categorías (`GET /api/productos`, `GET /api/categorias`) y panel administrativo para crear categorías y crear, editar o eliminar productos (`POST`, `PUT`, `DELETE`).
+* **HU-03 — Carrito y Pedidos Transaccionales:** creación de órdenes (`POST /api/pedidos`) con validación de inventario y descuento automático de stock en PostgreSQL, historial de pedidos (`GET /api/pedidos`) y actualización de estado (`PUT /api/pedidos/{id}/estado`) con reversión automática de stock al cancelar.
 
 ## Instrucciones de Ejecución Local
 
