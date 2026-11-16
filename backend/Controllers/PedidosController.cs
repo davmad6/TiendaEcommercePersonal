@@ -5,7 +5,7 @@ using TiendaEcommerce.Api.Services;
 namespace TiendaEcommerce.Api.Controllers
 {
     /// <summary>
-    /// HU-03: Endpoints REST para creación, consulta y gestión de estado de pedidos.
+    /// HU-03: Controlador REST para la gestión de Pedidos, transacciones y control de stock.
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -18,7 +18,10 @@ namespace TiendaEcommerce.Api.Controllers
             _pedidoService = pedidoService;
         }
 
-        // GET: api/pedidos?idUsuario=1
+        /// <summary>
+        /// Endpoint GET para listar todos los pedidos registrados o filtrados por usuario.
+        /// HU-03: Permite consultar el historial de compras.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos([FromQuery] int? idUsuario = null)
         {
@@ -26,7 +29,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(pedidos);
         }
 
-        // GET: api/pedidos/1
+        /// <summary>
+        /// Endpoint GET para consultar el detalle de un pedido específico por su ID.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -35,11 +40,13 @@ namespace TiendaEcommerce.Api.Controllers
             {
                 return NotFound(new { mensaje = "Pedido no encontrado." });
             }
-
             return Ok(pedido);
         }
 
-        // POST: api/pedidos
+        /// <summary>
+        /// Endpoint POST para crear un nuevo pedido. 
+        /// HU-03: Valida el stock disponible, descuenta inventario y genera el registro transaccional.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearPedidoDto dto)
         {
@@ -56,7 +63,9 @@ namespace TiendaEcommerce.Api.Controllers
             );
         }
 
-        // PUT: api/pedidos/1/estado
+        /// <summary>
+        /// Endpoint PUT para actualizar el estado logístico de un pedido (Pendiente, Pagado, Enviado, Entregado).
+        /// </summary>
         [HttpPut("{id:int}/estado")]
         public async Task<IActionResult> ActualizarEstado(int id, [FromBody] ActualizarEstadoPedidoDto dto)
         {
@@ -65,8 +74,7 @@ namespace TiendaEcommerce.Api.Controllers
             {
                 return BadRequest(new { mensaje = resultado.Mensaje });
             }
-
-            return Ok(new { mensaje = resultado.Mensaje, pedido = resultado.Datos });
+            return Ok(new { mensaje = resultado.Mensaje });
         }
     }
 }

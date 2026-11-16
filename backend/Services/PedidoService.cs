@@ -56,6 +56,10 @@ namespace TiendaEcommerce.Api.Services
             return pedido == null ? null : MapearPedido(pedido);
         }
 
+        /// <summary>
+        /// HU-03: Valida existencia del usuario, verifica disponibilidad de stock por producto,
+        /// calcula el total de la orden y ejecuta el registro transaccional en base de datos.
+        /// </summary>
         public async Task<(bool Exito, string Mensaje, PedidoRespuestaDto? Datos)> CrearPedidoAsync(CrearPedidoDto dto)
         {
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(dto.IdUsuario);
@@ -116,6 +120,7 @@ namespace TiendaEcommerce.Api.Services
                 Detalles = detalles
             };
 
+            // Persiste el pedido, su detalle y descuenta el stock de forma atómica (transaccional)
             var pedidoCreado = await _pedidoRepository.CrearPedidoTransaccionalAsync(nuevoPedido);
             return (true, "Pedido registrado correctamente.", MapearPedido(pedidoCreado));
         }

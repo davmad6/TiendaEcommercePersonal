@@ -8,6 +8,11 @@ interface PedidosPageProps {
 
 const ESTADOS_DISPONIBLES = ['Pendiente', 'Pagado', 'Enviado', 'Entregado', 'Cancelado'];
 
+/**
+ * Vista principal del módulo de Pedidos (HU-03).
+ * Permite consultar el historial de órdenes, filtrar por usuario autenticado
+ * y gestionar los cambios de estado logístico conectando con la API REST.
+ */
 export function PedidosPage({ usuario }: PedidosPageProps) {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [soloMisPedidos, setSoloMisPedidos] = useState(false);
@@ -15,6 +20,7 @@ export function PedidosPage({ usuario }: PedidosPageProps) {
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Consulta los pedidos registrados al montar el componente o al alternar el filtro de usuario
   useEffect(() => {
     let activo = true;
 
@@ -44,6 +50,10 @@ export function PedidosPage({ usuario }: PedidosPageProps) {
     };
   }, [soloMisPedidos, usuario]);
 
+  /**
+   * Envía petición PUT al backend para actualizar el estado de un pedido
+   * y recarga el listado (si se cancela, el backend restaura el stock automáticamente).
+   */
   const cambiarEstado = async (idPedido: number, nuevoEstado: string) => {
     setMensaje(null);
     setError(null);
