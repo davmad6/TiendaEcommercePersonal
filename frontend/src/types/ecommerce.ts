@@ -1,5 +1,11 @@
+/**
+ * Definición de interfaces y tipos de TypeScript para TiendaEcommercePersonal.
+ * Asegura la integridad de los datos intercambiados entre React y la API REST en .NET.
+ */
+
 // ================= USUARIOS (HU-01) =================
 
+/** Representa los datos públicos de un usuario autenticado en el sistema. */
 export interface Usuario {
   idUsuario: number;
   nombre: string;
@@ -8,6 +14,7 @@ export interface Usuario {
   telefono?: string | null;
 }
 
+/** Datos requeridos para registrar una nueva cuenta de cliente. */
 export interface RegistroUsuarioPayload {
   nombre: string;
   email: string;
@@ -16,6 +23,7 @@ export interface RegistroUsuarioPayload {
   telefono?: string;
 }
 
+/** Credenciales necesarias para iniciar sesión. */
 export interface LoginUsuarioPayload {
   email: string;
   contrasena: string;
@@ -23,15 +31,18 @@ export interface LoginUsuarioPayload {
 
 // ================= CATÁLOGO (HU-02) =================
 
+/** Representa una categoría del catálogo de productos. */
 export interface Categoria {
   idCategoria: number;
   nombre: string;
 }
 
+/** Carga útil para crear o actualizar una categoría. */
 export interface GuardarCategoriaPayload {
   nombre: string;
 }
 
+/** Representa un producto disponible en la tienda con su categoría asociada. */
 export interface Producto {
   idProducto: number;
   nombre: string;
@@ -42,6 +53,7 @@ export interface Producto {
   nombreCategoria: string;
 }
 
+/** Datos enviados al backend para registrar o editar un producto. */
 export interface GuardarProductoPayload {
   nombre: string;
   descripcion?: string;
@@ -52,11 +64,13 @@ export interface GuardarProductoPayload {
 
 // ================= PEDIDOS Y CARRITO (HU-03) =================
 
+/** Elemento almacenado en el estado local del carrito de compras. */
 export interface ItemCarrito {
   producto: Producto;
   cantidad: number;
 }
 
+/** Estructura enviada para confirmar y registrar una nueva orden de compra. */
 export interface CrearPedidoPayload {
   idUsuario: number;
   items: {
@@ -65,6 +79,7 @@ export interface CrearPedidoPayload {
   }[];
 }
 
+/** Línea individual de detalle dentro de un pedido registrado. */
 export interface DetallePedido {
   idDetalle: number;
   idProducto: number;
@@ -74,6 +89,7 @@ export interface DetallePedido {
   subtotal: number;
 }
 
+/** Representa un pedido completo con su estado logístico y lista de detalles. */
 export interface Pedido {
   idPedido: number;
   fecha: string;

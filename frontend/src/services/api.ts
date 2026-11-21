@@ -1,3 +1,8 @@
+/**
+ * Capa de servicios HTTP para comunicarse con el backend ASP.NET Core.
+ * Centraliza todas las peticiones fetch hacia los endpoints REST de la tienda.
+ */
+
 import type {
   Categoria,
   CrearPedidoPayload,
@@ -10,8 +15,13 @@ import type {
   Usuario,
 } from '../types/ecommerce';
 
+/** URL base del servidor backend local. */
 const API_BASE_URL = 'http://localhost:5028/api';
 
+/**
+ * Procesa la respuesta de fetch, valida códigos de estado HTTP y extrae
+ * mensajes de error enviados por el servidor cuando la petición falla.
+ */
 async function manejarRespuesta<T>(response: Response): Promise<T> {
   if (response.status === 204) {
     return undefined as T;
@@ -35,11 +45,13 @@ async function manejarRespuesta<T>(response: Response): Promise<T> {
 // ================= SERVICIO DE USUARIOS =================
 
 export const usuariosApi = {
+  /** Obtiene el listado completo de usuarios registrados. */
   listar: async (): Promise<Usuario[]> => {
     const res = await fetch(`${API_BASE_URL}/usuarios`);
     return manejarRespuesta<Usuario[]>(res);
   },
 
+  /** Registra un nuevo cliente mediante una petición POST. */
   registrar: async (payload: RegistroUsuarioPayload): Promise<{ mensaje: string; usuario: Usuario }> => {
     const res = await fetch(`${API_BASE_URL}/usuarios`, {
       method: 'POST',
@@ -59,6 +71,7 @@ export const usuariosApi = {
     };
   },
 
+  /** Valida las credenciales del usuario contra los registros disponibles y retorna su sesión limpia. */
   login: async (payload: LoginUsuarioPayload): Promise<{ mensaje: string; usuario: Usuario }> => {
     const res = await fetch(`${API_BASE_URL}/usuarios`);
     const usuarios = await manejarRespuesta<Array<Usuario & { contrasena?: string }>>(res);
@@ -91,11 +104,13 @@ export const usuariosApi = {
 // ================= SERVICIO DE CATÁLOGO =================
 
 export const catalogoApi = {
+  /** Consulta todas las categorías disponibles en el sistema. */
   listarCategorias: async (): Promise<Categoria[]> => {
     const res = await fetch(`${API_BASE_URL}/categorias`);
     return manejarRespuesta<Categoria[]>(res);
   },
 
+  /** Crea una nueva categoría en el catálogo. */
   crearCategoria: async (payload: GuardarCategoriaPayload): Promise<Categoria> => {
     const res = await fetch(`${API_BASE_URL}/categorias`, {
       method: 'POST',
@@ -105,6 +120,7 @@ export const catalogoApi = {
     return manejarRespuesta<Categoria>(res);
   },
 
+  /** Obtiene los productos del catálogo, permitiendo filtrar opcionalmente por categoría. */
   listarProductos: async (idCategoria?: number): Promise<Producto[]> => {
     const url = idCategoria
       ? `${API_BASE_URL}/productos?idCategoria=${idCategoria}`
@@ -113,6 +129,7 @@ export const catalogoApi = {
     return manejarRespuesta<Producto[]>(res);
   },
 
+  /** Registra un nuevo producto en el inventario. */
   crearProducto: async (payload: GuardarProductoPayload): Promise<Producto> => {
     const res = await fetch(`${API_BASE_URL}/productos`, {
       method: 'POST',
@@ -122,6 +139,7 @@ export const catalogoApi = {
     return manejarRespuesta<Producto>(res);
   },
 
+  /** Actualiza los datos o el stock de un producto existente por su ID. */
   actualizarProducto: async (id: number, payload: GuardarProductoPayload): Promise<Producto> => {
     const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: 'PUT',
@@ -131,6 +149,7 @@ export const catalogoApi = {
     return manejarRespuesta<Producto>(res);
   },
 
+  /** Elimina un producto del catálogo mediante su identificador. */
   eliminarProducto: async (id: number): Promise<void> => {
     const res = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: 'DELETE',
@@ -144,6 +163,7 @@ export const catalogoApi = {
 // ================= SERVICIO DE PEDIDOS =================
 
 export const pedidosApi = {
+  /** Lista los pedidos registrados, filtrando por usuario cuando se indica su ID. */
   listar: async (idUsuario?: number): Promise<Pedido[]> => {
     const url = idUsuario
       ? `${API_BASE_URL}/pedidos?idUsuario=${idUsuario}`
@@ -152,6 +172,7 @@ export const pedidosApi = {
     return manejarRespuesta<Pedido[]>(res);
   },
 
+  /** Envía una nueva orden de compra para su procesamiento transaccional en el backend. */
   crear: async (payload: CrearPedidoPayload): Promise<{ mensaje: string; pedido: Pedido }> => {
     const res = await fetch(`${API_BASE_URL}/pedidos`, {
       method: 'POST',
@@ -171,6 +192,7 @@ export const pedidosApi = {
     };
   },
 
+  /** Actualiza el estado logístico de un pedido (Pendiente, Pagado, Enviado, Entregado o Cancelado). */
   actualizarEstado: async (
     idPedido: number,
     estado: string

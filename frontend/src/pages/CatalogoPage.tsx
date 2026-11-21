@@ -1,7 +1,14 @@
+/**
+ * Vista pública del Catálogo de Productos (HU-02).
+ * Consulta los productos y categorías desde la API, permite filtrar por categoría,
+ * verifica la disponibilidad de stock y añade artículos al carrito.
+ */
+
 import { useEffect, useState } from 'react';
 import { catalogoApi } from '../services/api';
 import type { Categoria, ItemCarrito, Producto } from '../types/ecommerce';
 
+/** Propiedades recibidas desde App para sincronizar el carrito activo. */
 interface CatalogoPageProps {
   carrito: ItemCarrito[];
   onAgregarAlCarrito: (producto: Producto) => void;
@@ -14,6 +21,7 @@ export function CatalogoPage({ carrito, onAgregarAlCarrito }: CatalogoPageProps)
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Carga el listado de categorías disponibles al montar el componente
   useEffect(() => {
     const cargarCategorias = async () => {
       try {
@@ -26,6 +34,7 @@ export function CatalogoPage({ carrito, onAgregarAlCarrito }: CatalogoPageProps)
     cargarCategorias();
   }, []);
 
+  // Consulta los productos cada vez que cambia la categoría seleccionada
   useEffect(() => {
     const cargarProductos = async () => {
       setCargando(true);
@@ -42,6 +51,7 @@ export function CatalogoPage({ carrito, onAgregarAlCarrito }: CatalogoPageProps)
     cargarProductos();
   }, [categoriaSeleccionada]);
 
+  /** Retorna cuántas unidades de un producto específico ya están agregadas en el carrito. */
   const obtenerCantidadEnCarrito = (idProducto: number) => {
     const item = carrito.find((i) => i.producto.idProducto === idProducto);
     return item ? item.cantidad : 0;
@@ -80,6 +90,7 @@ export function CatalogoPage({ carrito, onAgregarAlCarrito }: CatalogoPageProps)
 
       {error && <div className="alert alert-error">{error}</div>}
 
+      {/* Cuadrícula de tarjetas de productos con control de inventario */}
       {cargando ? (
         <div className="card">Cargando productos desde PostgreSQL...</div>
       ) : productos.length === 0 ? (

@@ -1,12 +1,20 @@
-import { useState, type FormEvent } from 'react';
+/**
+ * Vista de Autenticación y Registro de Usuarios (HU-01).
+ * Alterna entre el formulario de inicio de sesión y el de creación de cuenta,
+ * devolviendo el usuario autenticado al contenedor principal App.
+ */
+
+import { useState, type SyntheticEvent } from 'react';
 import { usuariosApi } from '../services/api';
 import type { Usuario } from '../types/ecommerce';
 
+/** Propiedades recibidas desde App para notificar una autenticación exitosa. */
 interface AuthPageProps {
   onAutenticado: (usuario: Usuario) => void;
 }
 
 export function AuthPage({ onAutenticado }: AuthPageProps) {
+  // Estados para controlar el modo (login o registro) y los campos del formulario
   const [modoRegistro, setModoRegistro] = useState(false);
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
@@ -16,7 +24,8 @@ export function AuthPage({ onAutenticado }: AuthPageProps) {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const manejarEnvio = async (e: FormEvent) => {
+  /** Procesa el envío del formulario ejecutando el registro o el inicio de sesión. */
+  const manejarEnvio = async (e: SyntheticEvent) => {
     e.preventDefault();
     setError(null);
     setCargando(true);
@@ -45,6 +54,7 @@ export function AuthPage({ onAutenticado }: AuthPageProps) {
   return (
     <div className="auth-wrapper">
       <div className="card">
+        {/* Pestañas para alternar entre Iniciar Sesión y Crear Cuenta */}
         <div className="auth-tabs">
           <button
             type="button"
@@ -80,6 +90,7 @@ export function AuthPage({ onAutenticado }: AuthPageProps) {
         {error && <div className="alert alert-error">{error}</div>}
 
         <form onSubmit={manejarEnvio}>
+          {/* Campo de nombre visible solo en modo registro */}
           {modoRegistro && (
             <div className="form-group">
               <label htmlFor="nombre">Nombre completo *</label>
@@ -121,6 +132,7 @@ export function AuthPage({ onAutenticado }: AuthPageProps) {
             />
           </div>
 
+          {/* Campos opcionales de envío disponibles al crear cuenta */}
           {modoRegistro && (
             <>
               <div className="form-group">

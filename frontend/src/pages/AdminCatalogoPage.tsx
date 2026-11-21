@@ -1,13 +1,20 @@
-import { useEffect, useState, type FormEvent } from 'react';
+/**
+ * Vista de Administración de Catálogo (HU-02).
+ * Permite crear nuevas categorías y realizar operaciones CRUD (crear, listar,
+ * editar y eliminar) sobre los productos almacenados en PostgreSQL.
+ */
+
+import { useEffect, useState, type SyntheticEvent } from 'react';
 import { catalogoApi } from '../services/api';
 import type { Categoria, Producto } from '../types/ecommerce';
 
 export function AdminCatalogoPage() {
+  // Estados principales de datos del catálogo
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [productos, setProductos] = useState<Producto[]>([]);
   const [nombreCategoria, setNombreCategoria] = useState('');
 
-  // Formulario de producto
+  // Estados del formulario de creación y edición de productos
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [nombreProd, setNombreProd] = useState('');
   const [descripcionProd, setDescripcionProd] = useState('');
@@ -15,9 +22,11 @@ export function AdminCatalogoPage() {
   const [stockProd, setStockProd] = useState('');
   const [idCategoriaProd, setIdCategoriaProd] = useState<number>(1);
 
+  // Estados de retroalimentación visual (mensajes de éxito o error)
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  /** Consulta nuevamente categorías y productos para mantener sincronizada la tabla. */
   const recargarDatos = async () => {
     try {
       const [cats, prods] = await Promise.all([
@@ -36,6 +45,7 @@ export function AdminCatalogoPage() {
     }
   };
 
+  // Carga inicial de categorías y productos al montar la vista
   useEffect(() => {
     let activo = true;
 
@@ -67,6 +77,7 @@ export function AdminCatalogoPage() {
     };
   }, []);
 
+  /** Restablece los campos del formulario de producto y sale del modo edición. */
   const limpiarFormularioProducto = () => {
     setEditandoId(null);
     setNombreProd('');
@@ -75,7 +86,8 @@ export function AdminCatalogoPage() {
     setStockProd('');
   };
 
-  const guardarCategoria = async (e: FormEvent) => {
+  /** Envía petición POST para registrar una nueva categoría. */
+  const guardarCategoria = async (e: SyntheticEvent) => {
     e.preventDefault();
     setMensaje(null);
     setError(null);
@@ -89,7 +101,8 @@ export function AdminCatalogoPage() {
     }
   };
 
-  const guardarProducto = async (e: FormEvent) => {
+  /** Crea un producto nuevo (POST) o actualiza uno existente (PUT) según editandoId. */
+  const guardarProducto = async (e: SyntheticEvent) => {
     e.preventDefault();
     setMensaje(null);
     setError(null);
@@ -117,6 +130,7 @@ export function AdminCatalogoPage() {
     }
   };
 
+  /** Carga los datos de un producto seleccionado en el formulario para editarlo. */
   const cargarParaEditar = (prod: Producto) => {
     setEditandoId(prod.idProducto);
     setNombreProd(prod.nombre);
@@ -128,6 +142,7 @@ export function AdminCatalogoPage() {
     setError(null);
   };
 
+  /** Elimina un producto del inventario mediante petición DELETE. */
   const eliminarProducto = async (id: number) => {
     setMensaje(null);
     setError(null);
@@ -153,7 +168,7 @@ export function AdminCatalogoPage() {
       {error && <div className="alert alert-error">{error}</div>}
 
       <div className="grid-dos-columnas" style={{ marginBottom: '1.5rem' }}>
-        {/* Crear Categoría */}
+        {/* Formulario para crear nueva categoría */}
         <div className="card">
           <h3 style={{ marginBottom: '0.85rem' }}>Nueva Categoría</h3>
           <form onSubmit={guardarCategoria}>
@@ -175,7 +190,7 @@ export function AdminCatalogoPage() {
           </form>
         </div>
 
-        {/* Crear / Editar Producto */}
+        {/* Formulario para registrar o editar producto */}
         <div className="card">
           <h3 style={{ marginBottom: '0.85rem' }}>
             {editandoId !== null ? `Editando Producto #${editandoId}` : 'Registrar Producto'}
@@ -267,7 +282,7 @@ export function AdminCatalogoPage() {
         </div>
       </div>
 
-      {/* Tabla de Productos */}
+      {/* Tabla con el listado actual de productos en inventario */}
       <div className="card">
         <h3 style={{ marginBottom: '0.85rem' }}>Inventario Actual</h3>
         <div className="table-responsive">

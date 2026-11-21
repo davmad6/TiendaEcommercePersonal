@@ -1,7 +1,14 @@
+/**
+ * Vista del Carrito de Compras (HU-03).
+ * Muestra los artículos agregados, permite modificar cantidades o quitar productos,
+ * calcula el valor total y envía la orden de compra al backend.
+ */
+
 import { useState } from 'react';
 import { pedidosApi } from '../services/api';
 import type { ItemCarrito, Usuario } from '../types/ecommerce';
 
+/** Propiedades recibidas desde App para gestionar los artículos del carrito y la sesión. */
 interface CarritoPageProps {
   carrito: ItemCarrito[];
   usuario: Usuario | null;
@@ -24,11 +31,13 @@ export function CarritoPage({
   const [procesando, setProcesando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /** Calcula el valor total acumulado multiplicando precio por cantidad de cada ítem. */
   const totalCompra = carrito.reduce(
     (acum, item) => acum + item.producto.precio * item.cantidad,
     0
   );
 
+  /** Valida que exista un usuario autenticado y registra el pedido en el servidor. */
   const confirmarPedido = async () => {
     if (!usuario) {
       onIrALogin();
@@ -72,6 +81,7 @@ export function CarritoPage({
 
       {error && <div className="alert alert-error">{error}</div>}
 
+      {/* Renderiza mensaje informativo si no hay artículos o la tabla de resumen */}
       {carrito.length === 0 ? (
         <div className="card">
           <p>Tu carrito está vacío. Agrega productos desde el catálogo para iniciar un pedido.</p>
@@ -98,6 +108,7 @@ export function CarritoPage({
                     </td>
                     <td>${producto.precio.toLocaleString('es-CO')}</td>
                     <td>
+                      {/* Controles para incrementar o disminuir unidades respetando el stock */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                         <button
                           type="button"
@@ -135,6 +146,7 @@ export function CarritoPage({
             </table>
           </div>
 
+          {/* Resumen del total y botón de confirmación según el estado de sesión */}
           <div
             style={{
               marginTop: '1.35rem',
