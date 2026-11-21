@@ -18,14 +18,18 @@ namespace TiendaEcommerce.Api.Controllers
             _catalogoService = catalogoService;
         }
 
-        // GET: api/categorias
+        /// <summary>
+        /// Endpoint GET para listar todas las categorías disponibles en el catálogo.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<CategoriaRespuestaDto>>> ObtenerTodas()
         {
             return Ok(await _catalogoService.ObtenerCategoriasAsync());
         }
 
-        // GET: api/categorias/1
+        /// <summary>
+        /// Endpoint GET para consultar una categoría específica por su ID.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CategoriaRespuestaDto>> ObtenerPorId(int id)
         {
@@ -37,7 +41,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(categoria);
         }
 
-        // POST: api/categorias
+        /// <summary>
+        /// Endpoint POST para registrar una nueva categoría en el catálogo.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<CategoriaRespuestaDto>> Crear([FromBody] GuardarCategoriaDto dto)
         {
@@ -53,7 +59,9 @@ namespace TiendaEcommerce.Api.Controllers
                 resultado.Datos);
         }
 
-        // PUT: api/categorias/1
+        /// <summary>
+        /// Endpoint PUT para actualizar el nombre de una categoría existente.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<ActionResult<CategoriaRespuestaDto>> Actualizar(int id, [FromBody] GuardarCategoriaDto dto)
         {
@@ -70,7 +78,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(resultado.Datos);
         }
 
-        // DELETE: api/categorias/1
+        /// <summary>
+        /// Endpoint DELETE para eliminar una categoría por su ID si no tiene productos asociados.
+        /// </summary>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Eliminar(int id)
         {

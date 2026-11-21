@@ -19,7 +19,9 @@ namespace TiendaEcommerce.Api.Controllers
             _usuarioService = usuarioService;
         }
 
-        // GET: api/usuarios
+        /// <summary>
+        /// Endpoint GET para listar todos los usuarios registrados sin exponer sus contraseñas.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<UsuarioRespuestaDto>>> ObtenerTodos()
         {
@@ -27,7 +29,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(usuarios);
         }
 
-        // GET: api/usuarios/5
+        /// <summary>
+        /// Endpoint GET para consultar un usuario específico por su ID.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UsuarioRespuestaDto>> ObtenerPorId(int id)
         {
@@ -39,7 +43,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(usuario);
         }
 
-        // POST: api/usuarios
+        /// <summary>
+        /// Endpoint POST para registrar un nuevo usuario validando que el correo no esté duplicado.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<UsuarioRespuestaDto>> Crear([FromBody] CrearUsuarioDto dto)
         {
@@ -55,7 +61,9 @@ namespace TiendaEcommerce.Api.Controllers
                 resultado.Datos);
         }
 
-        // PUT: api/usuarios/5
+        /// <summary>
+        /// Endpoint PUT para actualizar los datos de un usuario existente.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<ActionResult<UsuarioRespuestaDto>> Actualizar(int id, [FromBody] ActualizarUsuarioDto dto)
         {
@@ -72,7 +80,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(resultado.Datos);
         }
 
-        // DELETE: api/usuarios/5
+        /// <summary>
+        /// Endpoint DELETE para eliminar un usuario del sistema por su ID.
+        /// </summary>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Eliminar(int id)
         {

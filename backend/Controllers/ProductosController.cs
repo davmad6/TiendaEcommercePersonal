@@ -19,14 +19,18 @@ namespace TiendaEcommerce.Api.Controllers
             _catalogoService = catalogoService;
         }
 
-        // GET: api/productos  o  GET: api/productos?idCategoria=1
+        /// <summary>
+        /// Endpoint GET para listar todos los productos o filtrarlos por categoría (?idCategoria=1).
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<ProductoRespuestaDto>>> ObtenerTodos([FromQuery] int? idCategoria)
         {
             return Ok(await _catalogoService.ObtenerProductosAsync(idCategoria));
         }
 
-        // GET: api/productos/1
+        /// <summary>
+        /// Endpoint GET para consultar el detalle de un producto específico por su ID.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductoRespuestaDto>> ObtenerPorId(int id)
         {
@@ -38,7 +42,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(producto);
         }
 
-        // POST: api/productos
+        /// <summary>
+        /// Endpoint POST para registrar un nuevo producto en el inventario del catálogo.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ProductoRespuestaDto>> Crear([FromBody] GuardarProductoDto dto)
         {
@@ -54,7 +60,9 @@ namespace TiendaEcommerce.Api.Controllers
                 resultado.Datos);
         }
 
-        // PUT: api/productos/1
+        /// <summary>
+        /// Endpoint PUT para actualizar los datos, precio o stock de un producto existente.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ProductoRespuestaDto>> Actualizar(int id, [FromBody] GuardarProductoDto dto)
         {
@@ -71,7 +79,9 @@ namespace TiendaEcommerce.Api.Controllers
             return Ok(resultado.Datos);
         }
 
-        // DELETE: api/productos/1
+        /// <summary>
+        /// Endpoint DELETE para eliminar un producto del catálogo por su ID.
+        /// </summary>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Eliminar(int id)
         {
